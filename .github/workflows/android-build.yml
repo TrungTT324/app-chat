@@ -31,10 +31,15 @@ jobs:
           path: app_chat/build/app/outputs/flutter-apk/app-debug.apk
       - name: 📦 Create Release
   
-  uses: softprops/action-gh-release@v2
-  with:
-    tag_name: v1.0.${{ github.run_number }}
-    name: Build v1.0.${{ github.run_number }}
-    files: app_chat/build/app/outputs/flutter-apk/app-debug.apk
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 6. Create GitHub Release & attach APK
+
+      - name: 🚀 Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: debug-v${{ github.run_number }}
+          name: Debug Build v${{ github.run_number }}
+          draft: false
+          prerelease: true
+          files: app_chat/build/app/outputs/flutter-apk/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
