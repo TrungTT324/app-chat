@@ -2,9 +2,11 @@ name: Build Flutter Debug APK
 
 on:
   workflow_dispatch:
-
+permissions:
+  contents: write   
+  
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +31,7 @@ jobs:
         with:
           name: debug-apk
           path: app_chat/build/app/outputs/flutter-apk/app-debug.apk
-                
+
       - name: 🚀 Create Release
         uses: softprops/action-gh-release@v2
         with:
