@@ -1,8 +1,7 @@
 name: Build Flutter Debug APK
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
