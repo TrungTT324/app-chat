@@ -1,9 +1,8 @@
 name: Build Flutter Debug APK
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+  workflow_dispatch
+  # push:  
 
 jobs:
   build:
@@ -16,11 +15,8 @@ jobs:
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.0" # hoặc version bạn đang dùng
+          flutter-version: "3.22.0" # hoặc version bạn đang dùng      
 
-      - name: 📦 Install dependencies
-        run: cd app_chat
-        
       - name: 📦 Install dependencies
         run: flutter pub get
 
