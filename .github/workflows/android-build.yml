@@ -1,20 +1,40 @@
-name: Build Debug APK
+name: Build Flutter Debug APK
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.24.x'
-    - run: cd app_chat
-    - run: flutter pub get
-    - run: flutter build apk --debug
-    - uses: actions/upload-artifact@v4
-      with:
-        name: app-debug.apk
-        path: build/app/outputs/flutter-apk/app-debug.apk
+      - name: 📥 Checkout source
+        uses: actions/checkout@v4
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.0" # hoặc version bạn đang dùng
+
+      - name: 📦 Install dependencies
+        run: cd app_chat
+        
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🔍 Analyze project
+        run: flutter analyze
+
+      - name: 🧪 Run tests
+        run: flutter test
+
+      - name: 🏗 Build Debug APK
+        run: flutter build apk --debug
+
+      - name: 📤 Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
