@@ -1,0 +1,59 @@
+name: Build Windows App
+
+on:  
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest   # 👈 chạy trên Windows
+
+    steps:
+      # 1. Checkout
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Flutter
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.0"
+          channel: stable
+
+      # 3. Enable Windows
+      - name: 🖥 Enable Windows Desktop
+        run: flutter config --enable-windows-desktop
+
+      # 4. Install dependencies
+      - name: 📦 Install dependencies
+        working-directory: my_flutter_app
+        run: flutter pub get
+
+      # 5. Build Windows exe
+      - name: 🏗 Build Windows
+        working-directory: my_flutter_app
+        run: flutter build windows
+
+      # 6. Zip build output
+      - name: 📦 Zip app
+        run: |
+          powershell Compress-Archive -Path my_flutter_app\build\windows\x64\runner\Release\* -DestinationPath windows-app.zip
+
+      # 7. Upload artifact
+      - name: 📤 Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-app
+          path: windows-app.zip
+
+      # 8. Create Release
+      - name: 🚀 Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: win-v${{ github.run_number }}
+          name: Windows Build v${{ github.run_number }}
+          files: windows-app.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
