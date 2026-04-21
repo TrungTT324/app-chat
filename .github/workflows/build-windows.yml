@@ -28,18 +28,18 @@ jobs:
 
       # 4. Install dependencies
       - name: 📦 Install dependencies
-        working-directory: my_flutter_app
+        working-directory: app_chat
         run: flutter pub get
 
       # 5. Build Windows exe
       - name: 🏗 Build Windows
-        working-directory: my_flutter_app
+        working-directory: app_chat
         run: flutter build windows
 
       # 6. Zip build output
       - name: 📦 Zip app
         run: |
-          powershell Compress-Archive -Path my_flutter_app\build\windows\x64\runner\Release\* -DestinationPath windows-app.zip
+          powershell Compress-Archive -Path app_chat\build\windows\x64\runner\Release\* -DestinationPath windows-app.zip
 
       # 7. Upload artifact
       - name: 📤 Upload artifact
