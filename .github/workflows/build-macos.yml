@@ -1,0 +1,54 @@
+name: Build macOS App
+
+on:  
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.0"
+          channel: stable
+          cache: true
+
+      - name: 🍎 Enable macOS Desktop
+        run: flutter config --enable-macos-desktop
+
+      # 👇 QUAN TRỌNG
+      - name: 📦 Install dependencies
+        working-directory: app_chat
+        run: flutter pub get
+
+      - name: 🏗 Build macOS
+        working-directory: app_chat
+        run: flutter build macos
+
+      - name: 📦 Zip app
+        run: |
+          cd app_chat/build/macos/Build/Products/Release
+          zip -r macos-app.zip *.app
+
+      - name: 📤 Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-app
+          path: app_chat/build/macos/Build/Products/Release/macos-app.zip
+
+      - name: 🚀 Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: macos-v${{ github.run_number }}
+          name: macOS Build v${{ github.run_number }}
+          files: app_chat/build/macos/Build/Products/Release/macos-app.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
