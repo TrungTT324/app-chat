@@ -1,0 +1,46 @@
+name: Build & Deploy Web
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Flutter
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.0"
+          cache: true
+
+      # 3. Enable web
+      - name: 🌐 Enable Web
+        run: flutter config --enable-web
+
+      # 4. Install dependencies
+      - name: 📦 Install dependencies
+        working-directory: app_chat   # 👈 nhớ path của bạn
+        run: flutter pub get
+
+      # 5. Build web
+      - name: 🏗 Build Web
+        working-directory: app_chat
+        run: flutter build web
+
+      # 6. Deploy to GitHub Pages
+      - name: 🚀 Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: app_chat/build/web
