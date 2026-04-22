@@ -1,19 +1,19 @@
-name: Build & Deploy Web
+name: Build & Deploy Flutter Web
 
 on:
-  # push:
-  #   branches: [ "main" ]
+  push:
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-web:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout
+      # 1. Checkout code
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
@@ -21,35 +21,29 @@ jobs:
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.41.7"
+          flutter-version: "3.22.0"
+          channel: stable
           cache: true
 
-      # 3. Enable web
+      # 3. Enable Web
       - name: 🌐 Enable Web
         run: flutter config --enable-web
 
       # 4. Install dependencies
       - name: 📦 Install dependencies
-        working-directory: app_chat   # 👈 nhớ path của bạn
+        working-directory: app_chat
         run: flutter pub get
 
-      # 5. Build web
+      # 5. Build Web (QUAN TRỌNG: base-href đúng repo)
       - name: 🏗 Build Web
         working-directory: app_chat
-        run: flutter build web
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
 
-      # 6. Deploy to GitHub Pages
-      - name: 🚀 Deploy
+      # 6. Deploy to gh-pages
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: app_chat/build/web
-      
-      - name: 🚀 Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: web-v${{ github.run_number }}
-          name: Web Build v${{ github.run_number }}
-          files: app_chat/build/web
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          force_orphan: true
