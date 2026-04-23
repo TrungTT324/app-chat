@@ -46,12 +46,14 @@ android {
                 storePassword = keystoreProperties.getProperty("storePassword")
                 keyAlias = keystoreProperties.getProperty("keyAlias")
                 keyPassword = keystoreProperties.getProperty("keyPassword")
-            } else {
+            }
+            else {
+                print("Không tìm thấy file keystore")
                 // Fallback cho debug (không nên dùng cho release)
-                storeFile = file("debug.keystore")
-                storePassword = "android"
-                keyAlias = "androiddebugkey"
-                keyPassword = "android"
+//                storeFile = file("debug.keystore")
+//                storePassword = "android"
+//                keyAlias = "androiddebugkey"
+//                keyPassword = "android"
             }
         }
     }
