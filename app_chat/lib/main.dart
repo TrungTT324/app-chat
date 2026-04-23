@@ -1,3 +1,4 @@
+import 'package:app_chat/rust/rust_api.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -55,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final String message = sayHello();
 
   void _incrementCounter() {
     setState(() {
@@ -105,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
+            Text('$message'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
