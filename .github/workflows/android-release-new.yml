@@ -140,66 +140,13 @@ jobs:
           # Đổi tên file APK
           mv build/app/outputs/flutter-apk/app-release.apk ../rustdesk-${{ env.VERSION }}.apk
 
-      # 13. Sign APK (nếu có signing key)
-      - uses: r0adkll/sign-android-release@v1
-        name: Sign APK
-        if: env.ANDROID_SIGNING_KEY != null && env.ANDROID_SIGNING_KEY != ''
-        id: sign-rustdesk
+      - name: 🚀 Create Release
+        uses: softprops/action-gh-release@v2
         with:
-          releaseDirectory: ./
-          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-          alias: ${{ secrets.ANDROID_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          releaseFiles: |
-            rustdesk-${{ env.VERSION }}.apk
-            *.apk
-        env:
-          BUILD_TOOLS_VERSION: ${{ env.ANDROID_SIGN_TOOL_VERSION }}
-
-      # 14. Upload unsigned APK as artifact
-      - name: Upload unsigned APK artifact
-        if: env.UPLOAD_ARTIFACT == 'true' && (env.ANDROID_SIGNING_KEY == null || env.ANDROID_SIGNING_KEY == '')
-        uses: actions/upload-artifact@v4
-        with:
-          name: rustdesk-android-unsigned
-          path: |
-            rustdesk-${{ env.VERSION }}.apk
-            rustdesk-${{ env.VERSION }}-*.apk
-
-      # 15. Upload signed APK as artifact
-      - name: Upload signed APK artifact
-        if: env.UPLOAD_ARTIFACT == 'true' && env.ANDROID_SIGNING_KEY != null && env.ANDROID_SIGNING_KEY != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: rustdesk-android-signed
-          path: ${{ steps.sign-rustdesk.outputs.signedReleaseFile }}
-
-      # 16. Create GitHub Release (nếu có tag)
-      - name: Create GitHub Release
-        if: env.UPLOAD_ARTIFACT == 'true' && env.TAG_NAME != null && env.TAG_NAME != ''
-        uses: softprops/action-gh-release@v1
-        with:
+          tag_name: debug-v${{ github.run_number }}
+          name: Debug Build v${{ github.run_number }}
+          draft: false
           prerelease: true
-          tag_name: ${{ env.TAG_NAME }}
-          name: "RustDesk Android ${{ env.TAG_NAME }}"
-          body: |
-            ## 📱 RustDesk for Android
-            
-            ### 📦 Downloads
-            - **Universal APK**: `rustdesk-${{ env.VERSION }}.apk`
-            - **Split APKs**: arm64-v8a, armeabi-v7a, x86_64
-            
-            ### 🔧 Installation
-            1. Download APK file
-            2. Allow "Install from unknown sources"
-            3. Open APK to install
-            
-            ### ⚠️ Note
-            This build does NOT include Rust native library (`librustdesk.so`).
-            Only Flutter UI layer.
-          files: |
-            rustdesk-${{ env.VERSION }}.apk
-            rustdesk-${{ env.VERSION }}-*.apk
+          files: app_chat/build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
