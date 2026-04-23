@@ -138,7 +138,7 @@ jobs:
           flutter build apk --release
           
           # Đổi tên file APK
-          mv build/app/outputs/flutter-apk/app-release.apk ../rustdesk-${{ env.VERSION }}.apk
+          # mv build/app/outputs/flutter-apk/app-release.apk ../rustdesk-${{ env.VERSION }}.apk
 
       - name: 🚀 Create Release
         uses: softprops/action-gh-release@v2
