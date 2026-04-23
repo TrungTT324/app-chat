@@ -90,7 +90,7 @@ jobs:
           storePassword=$KEYSTORE_PASSWORD
           keyPassword=$KEY_PASSWORD
           keyAlias=$KEY_ALIAS
-          storeFile=app/keystore.jks
+          storeFile=keystore.jks
           EOF
           
           echo "✅ key.properties created"
@@ -139,31 +139,6 @@ jobs:
           
           # Đổi tên file APK
           mv build/app/outputs/flutter-apk/app-release.apk ../rustdesk-${{ env.VERSION }}.apk
-
-      # 11. Build split APKs theo ABI (optional)
-      # - name: Build split APKs
-      #   run: |
-      #     cd flutter
-      #     flutter build apk --release --split-per-abi
-          
-      #     # Đổi tên các file APK
-      #     if [ -f "build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" ]; then
-      #       mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk ../rustdesk-${{ env.VERSION }}-armv7a.apk
-      #     fi
-      #     if [ -f "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" ]; then
-      #       mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ../rustdesk-${{ env.VERSION }}-arm64-v8a.apk
-      #     fi
-      #     if [ -f "build/app/outputs/flutter-apk/app-x86_64-release.apk" ]; then
-      #       mv build/app/outputs/flutter-apk/app-x86_64-release.apk ../rustdesk-${{ env.VERSION }}-x86_64.apk
-      #     fi
-
-      # # 12. Setup sign tool version
-      # - name: Setup sign tool version
-      #   shell: bash
-      #   run: |
-      #     BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
-      #     echo "ANDROID_SIGN_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
-      #     echo "Last build tool version is: $BUILD_TOOL_VERSION"
 
       # 13. Sign APK (nếu có signing key)
       - uses: r0adkll/sign-android-release@v1
