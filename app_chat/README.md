@@ -1,10 +1,11 @@
 # app_chat
+Chat app dựa trên flutter UI 
+- Phần core là rust library xử lý data, syn....
+- Ứng dụng github action để build artifacts 
+- Công nghệ realtime và offline syn data.
 
-A new Flutter project.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
+<!-- This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
@@ -14,4 +15,4 @@ A few resources to get you started if this is your first Flutter project:
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+samples, guidance on mobile development, and a full API reference. -->
